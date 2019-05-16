@@ -43,23 +43,23 @@ the corner as well as the theme change button.
 * userInput.js: input box for user to enter text
 
 ##### Day1:
--[ ] Brainstroming, game logic and proposal
--[ ] Setup github, and basic skeleton
+- [ ] Brainstroming, game logic and proposal
+- [ ] Setup github, and basic skeleton
 
 ##### Day2: 
--[ ] Complete the canvas, and structure
--[ ] Play the background music, able to mute/unmute background music
--[ ] Be able to switch the theme, i.e, the color 
+- [ ] Complete the canvas, and structure
+- [ ] Play the background music, able to mute/unmute background music
+- [ ] Be able to switch the theme, i.e, the color 
 
 ##### Day3: 
--[ ] Complete text box, can change color according to the theme
--[ ] Be able to render the box in game canvas
--[ ] Be able to fall from the top depending on the difficulty
+- [ ] Complete text box, can change color according to the theme
+- [ ] Be able to render the box in game canvas
+- [ ] Be able to fall from the top depending on the difficulty
 
 ##### Day4: 
--[ ] Complete merge everthing together
--[ ] Score will be updated
--[ ] Be able to stop the game when user loses
+- [ ] Complete merge everthing together
+- [ ] Score will be updated
+- [ ] Be able to stop the game when user loses
 
 ##### Day5:
--[ ] Be able to fix bugs, and implement more features
+- [ ] Be able to fix bugs, and implement more features
