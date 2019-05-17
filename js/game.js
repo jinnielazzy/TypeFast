@@ -5,13 +5,15 @@ class Game {
     this.score = document.getElementsByClassName("score");
     this.audio = document.getElementById("audio");
     this.music = document.getElementById("music");
+    this.input = document.getElementById("input");
     this.audio.load();
-  }
+  } 
 
   // function to start the game
   playGame() {
 
     this.music.style.display = "flex";
+    this.input.style.display = "flex";
     this.music.addEventListener("click", () => {
       const span = this.music.firstChild;
       if (this.music.className === "btn-mute") {

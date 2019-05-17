@@ -1,19 +1,21 @@
 body {
-  /* display: flex;
+  display: flex;
   flex-direction: column;
-  text-align: center; */
   text-align: center;
+  font-family: fantasy;
 }
 
 .header-container {
   /* display: flex;
   flex-direction: row;
   justify-content: center; */
+  height: 80px;
 }
 
 .main-container {
   display: flex;
   justify-content: center;
+  margin: 0;
 }
 
 .main-header-container {
@@ -42,6 +44,7 @@ body {
   opacity: 1;
   background-color: #ffffff;
   border: 3px solid rgba(22, 76, 167, 0.6);
+  font-family: fantasy;
 }
 
 #start-btn span {
@@ -76,6 +79,7 @@ body {
   width: 100px;
   opacity: 1;
   background: dodgerblue;
+  font-family: fantasy;
 }
 
 #music span {
@@ -88,4 +92,38 @@ body {
 canvas {
   background-color: aquamarine;
   /* margin-top: 80px; */
+}
+
+.board-container {
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+}
+
+#input input {
+  width: 100%;
+  display:block;
+  padding: 15px 0 15px 12px;
+  font-family: fantasy;
+  font-weight: 400;
+  background: powderblue;
+  outline: none;
+  border: 1px solid rgba(0,0,0,0.3);
+  border-radius: 4px;
+  box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px  1px rgba(255,255,255,0.2);
+  text-indent: 60px;
+  transition: all .3s ease-in-out;
+  position: relative;
+  font-size: 50px;
+  text-align: center;
+}
+
+#input input:focus {
+  background: none;
+  text-indent: 12px;
+  box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
+ }
+
+ ::-webkit-input-placeholder {
+   text-align: center;
 }
