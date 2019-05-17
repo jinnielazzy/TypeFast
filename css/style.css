@@ -20,6 +20,7 @@ body {
   position: absolute;
   display: flex;
   z-index: 1;
+  top: 40%;
 }
 
 #start-header {
@@ -31,10 +32,57 @@ body {
   flex-direction: column;
 }
 
+#start-btn {
+  border-radius: 50px;
+  justify-content: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  height: 100px;
+  width: 300px;
+  opacity: 1;
+  background-color: #ffffff;
+  border: 3px solid rgba(22, 76, 167, 0.6);
+}
+
+#start-btn span {
+  color: rgba(22, 76, 167, 1);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
+}
+
+#start-btn:hover {
+  animation: rotate 0.7s ease-in-out both
+}
+
+#start-btn span:hover {
+  animation: storm 0.7s ease-in-out both;
+  animation-delay: 0.06s
+}
+
 #list {
   cursor: pointer;
   list-style-type: none;
   padding: 0;
+}
+
+#music {
+  float: right;
+  display: flex;
+  border-radius: 50px;
+  justify-content: center;
+  text-transform: uppercase;
+  height: 50px;
+  width: 100px;
+  opacity: 1;
+  background: dodgerblue;
+}
+
+#music span {
+  color: rgba(22, 76, 167, 1);
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.7px;
 }
 
 canvas {

@@ -3,28 +3,24 @@ import Game from "./game";
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const c = canvas.getContext('2d');
- 
-  // const game = new Game(c);
-  
-  const startBtn = document.getElementById("start-btn");
-  const startHeader = document.getElementById("start-header");
-  const difficulty = document.getElementById("dropdown");
-  const list = document.getElementById("list");
+   
+  // let game = new Game(c);
 
-  difficulty.style.display = "none";
-  
+  const startBtn = document.getElementById("start-btn");
+  const startHeader = document.getElementById("start-header");  
+  const audio = document.getElementById("audio");
+  const music = document.getElementById("music");
+
+  audio.autoplay = false;
+  music.style.display = "none";
+
   startBtn.addEventListener("click", () => {
     startHeader.style.display = "none";
-    difficulty.style.display = "flex";
+    startGame();
   })
 
-  list.addEventListener("click", (e) => {
-    console.log(e.target.innerText);
-    difficulty.style.display = "none";
-    
-  })
-
-
-
-
+  function startGame() {
+    let game = new Game(c);
+    game.playGame();
+  }
 });
