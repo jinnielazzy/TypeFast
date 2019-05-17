@@ -1,0 +1,43 @@
+body {
+  /* display: flex;
+  flex-direction: column;
+  text-align: center; */
+  text-align: center;
+}
+
+.header-container {
+  /* display: flex;
+  flex-direction: row;
+  justify-content: center; */
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
+}
+
+.main-header-container {
+  position: absolute;
+  display: flex;
+  z-index: 1;
+}
+
+#start-header {
+  display: flex;
+}
+
+.difficulty {
+  display: flex;
+  flex-direction: column;
+}
+
+#list {
+  cursor: pointer;
+  list-style-type: none;
+  padding: 0;
+}
+
+canvas {
+  background-color: aquamarine;
+  /* margin-top: 80px; */
+}

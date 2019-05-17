@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./css/style.css">
+  <audio id="audio" src="./music/DAOKO (ダヲコ),米津玄師 (よねづ けんし)-打上花火.mp3"></audio>
+  <title>TypeFast</title>
+</head>
+<body>
+  <div class="header-container">
+    <div class="score">
+      Score
+    </div>
+    <div class="timer">
+      Timer
+    </div>
+    <div class="music">
+      <button class="btn-mute">MUSIC</button>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="main-header-container" id="main-header">
+      <div id="start-header">
+        <button id="start-btn">Start Game</button>
+      </div>
+      <div class="difficulty" id="dropdown">
+        <ul id="list">
+          <li>Easy</li>
+          <li>Medium</li>
+          <li>Hard</li>
+        </ul>
+      </div>
+    </div>
+    <div class="board-container">
+      <canvas width="1000" height="800" id="canvas"></canvas>
+      <script type="application/javascript" src="./bundle.js"></script>
+    </div>  
+  </div>
+</body>
+</html>
