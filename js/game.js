@@ -87,9 +87,9 @@ class Game {
         this.c.closePath();
       }
 
-      // if (this.boxes[0].y >= 800) {
-      //   this.gameOver = true;
-      // }
+      if (this.boxes[0].y >= 800) {
+        this.gameOver = true;
+      }
     } else {
       this.startHeader.style.display = "flex";
     }
