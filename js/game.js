@@ -1,4 +1,5 @@
 import Box from "./box";
+const randomWords = require('random-words');
 
 class Game {
   constructor(c) {
@@ -87,30 +88,29 @@ class Game {
         this.c.closePath();
       }
 
-      if (this.boxes[0].y >= 800) {
-        this.gameOver = true;
-      }
+      // if (this.boxes[0].y >= 800) {
+      //   this.gameOver = true;
+      // }
     } else {
       this.startHeader.style.display = "flex";
     }
   }
 
-  randomString() {
-    let result = "";
-    const characters = "abcdefghijklmnopqrstuvwxyz";
-    const length = Math.floor(Math.random() * 8);
-    const wordLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * wordLength));
-    }
-    return result;
-  }
-
+  // randomString() {
+  //   let result = "";
+  //   const characters = "abcdefghijklmnopqrstuvwxyz";
+  //   const length = Math.floor(Math.random() * 8);
+  //   const wordLength = characters.length;
+  //   for (let i = 0; i < length; i++) {
+  //     result += characters.charAt(Math.floor(Math.random() * wordLength));
+  //   }
+  //   return result;
+  // }
 
   spawnRandomObject() {
-    const str = this.randomString();
+    // const str = this.randomString();
+    const str = randomWords();
     let x = Math.random() * (this.c.canvas.width);
-    console.log("prev x " + x);
     console.log(x + this.c.measureText(str).width);
     while (x + this.c.measureText(str).width > 1000) {
       x -= 100;
