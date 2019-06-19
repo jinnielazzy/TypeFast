@@ -334,6 +334,7 @@ class Game {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span>Restart Game</span>";
       this.score.innerText = "";
+      this.audio.pause();
       this.initializeGame();
     }
   }
