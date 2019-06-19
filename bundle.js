@@ -102,20 +102,61 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("canvas");
   const c = canvas.getContext('2d');
 
+  c.canvas.width = 800;
+  c.canvas.height = 600;
+
+  const window = document;
   const startBtn = document.getElementById("start-btn");
   const startHeader = document.getElementById("start-header");  
   const audio = document.getElementById("audio");
   const music = document.getElementById("music");
   const input = document.getElementById("input");
+  const score = document.getElementById("score");
 
   audio.autoplay = false;
   music.style.display = "none";
   input.style.display = "none";
+  score.style.display = "none";
 
-  startBtn.addEventListener("click", () => {
+  const startGameHelper = () => {
     startHeader.style.display = "none";
     startGame();
+  }
+
+  window.onkeydown = (event) => {
+    if (event.keyCode === 13) {
+      startGameHelper();
+    }
+  }
+  
+  startBtn.addEventListener("click", () => {
+    startGameHelper();
   })
+  
+  // console.log(score);
+  // score.addEventListener("DOMSubtreeModified", () => {
+  //   console.log("text changed")
+  //   // add Animation
+
+  // })
+  
+  const config = {
+    childList: true,
+  };
+
+  const callback = (mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        const target = mutation.target;
+        // console.log(target);
+        // console.log(mutation.target.innerText);
+        // Animation here
+      }
+    }
+  };
+
+  const observer = new MutationObserver(callback);
+  observer.observe(score, config);
 
   function startGame() {
     let game = new _game__WEBPACK_IMPORTED_MODULE_0__["default"](c);
@@ -168,6 +209,7 @@ class Game {
     this.audio = document.getElementById("audio");
     this.music = document.getElementById("music");
     this.input = document.getElementById("input");
+    this.inputField = document.getElementById("text");
     this.startHeader = document.getElementById("start-header");
     this.startBtn = document.getElementById("start-btn");
 
@@ -182,17 +224,20 @@ class Game {
     this.gameOver = false;
     this.spawnY = 25;
     this.spawnRate = 1500;
-    this.spawnRateOfDescent = 3;
+    this.spawnRateOfDescent = 0.3;
     this.lastSpawn = -1;
     this.boxes = [];
+    this.words = [];
     this.startTime = Date.now();
     this.audio.load();
   }
 
   // function to start the game
   playGame() {
+    this.score.style.display = "flex";
     this.music.style.display = "flex";
     this.input.style.display = "flex";
+
     this.music.addEventListener("click", () => {
       const span = this.music.firstChild;
       if (this.music.className === "btn-mute") {
@@ -206,15 +251,24 @@ class Game {
       }
     })
 
+    // this.input.autofo
+    this.inputField.autofocus = true;
     this.audio.play();
     this.animate();
    }
 
   animate() {
     if (!this.gameOver) {
+      // testing code
+      // let testing = [];
+      // this.boxes.map(box => testing.push(box.text));
+      // console.log(testing.toString());
+      // console.log("--------------");
+      // console.log(this.words);
+
       this.input.addEventListener("input", e => {
-        if (e.target.value === this.boxes[0].text) {
-          this.boxes.shift();
+        const userInput = e.target.value;
+        if (this.words.includes(userInput)) {
           e.target.value = "";
           this.currentScore++;
           this.score.innerText = "Score: " + this.currentScore;
@@ -246,48 +300,34 @@ class Game {
         const box = this.boxes[i];
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
-        this.c.fillStyle = "#000000";
+        this.c.fillStyle = "#B6FF00";
         this.c.fillText(box.text, box.x, box.y);
-        this.c.font = "30px fantasy"
+        this.c.font = "30px Iceland";
         this.c.closePath();
       }
 
-      if (this.boxes[0].y >= 800) {
+      if (this.boxes[0].y >= this.c.canvas.height) {
         this.gameOver = true;
       }
     } else {
-      // this.startHeader.innerHTML = "RESTART"
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span>Restart Game</span>";
     }
   }
 
-  // randomString() {
-  //   let result = "";
-  //   const characters = "abcdefghijklmnopqrstuvwxyz";
-  //   const length = Math.floor(Math.random() * 8);
-  //   const wordLength = characters.length;
-  //   for (let i = 0; i < length; i++) {
-  //     result += characters.charAt(Math.floor(Math.random() * wordLength));
-  //   }
-  //   return result;
-  // }
-
   spawnRandomObject() {
     // const str = this.randomString();
-    const str = randomWords();
+    const word = randomWords();
+    // console.log(word);
     let x = Math.random() * (this.c.canvas.width);
-    console.log(x + this.c.measureText(str).width);
-    while (x + this.c.measureText(str).width > 1000) {
+
+    while (x + this.c.measureText(word).width > this.c.canvas.width) {
       x -= 100;
     }
-    console.log("now x " + x);
-    const box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, 
-      x,
-      this.spawnY,
-      str
-    );
 
+    const box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
+
+    this.words.push(word);
     this.boxes.push(box);
   }
 
