@@ -10,20 +10,25 @@ class Game {
     this.music = document.getElementById("music");
     this.input = document.getElementById("input");
     this.startHeader = document.getElementById("start-header");
+    this.startBtn = document.getElementById("start-btn");
 
     // when game starts
+    this.initializeGame();
+    this.animate = this.animate.bind(this);
+    this.spawnRandomObject = this.spawnRandomObject.bind(this);
+  } 
+
+  initializeGame() {
     this.currentScore = 0;
     this.gameOver = false;
     this.spawnY = 25;
     this.spawnRate = 1500;
-    this.spawnRateOfDescent = 0.50;
+    this.spawnRateOfDescent = 3;
     this.lastSpawn = -1;
     this.boxes = [];
     this.startTime = Date.now();
     this.audio.load();
-    this.animate = this.animate.bind(this);
-    this.spawnRandomObject = this.spawnRandomObject.bind(this);
-  } 
+  }
 
   // function to start the game
   playGame() {
@@ -88,11 +93,13 @@ class Game {
         this.c.closePath();
       }
 
-      // if (this.boxes[0].y >= 800) {
-      //   this.gameOver = true;
-      // }
+      if (this.boxes[0].y >= 800) {
+        this.gameOver = true;
+      }
     } else {
+      // this.startHeader.innerHTML = "RESTART"
       this.startHeader.style.display = "flex";
+      this.startBtn.innerHTML = "<span>Restart Game</span>";
     }
   }
 
