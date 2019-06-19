@@ -24,7 +24,7 @@ class Game {
     this.gameOver = false;
     this.spawnY = 25;
     this.spawnRate = 1500;
-    this.spawnRateOfDescent = 0.3;
+    this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
     this.boxes = [];
     this.words = [];
@@ -32,7 +32,7 @@ class Game {
     this.audio.load();
   }
 
-  // function to start the game
+  // function to start the gamewet
   playGame() {    
     this.score.innerText = "Score: 0";
     this.music.style.display = "flex";
@@ -50,12 +50,41 @@ class Game {
         span.innerHTML = "PAUSE"
       }
     })
-
+    
     // this.input.autofo
     this.inputField.autofocus = true;
     this.audio.play();
     this.animate();
-   }
+  }
+  
+  listenToInput() {
+    this.input.addEventListener("input", e => {
+      const userInput = e.target.value;
+      if (this.words.includes(userInput)) {
+        const box = this.boxes.find(box => box.text === userInput);
+        this.words = this.words.filter(word => word !== userInput);
+        this.boxes = this.boxes.filter(box => box.text != userInput);
+
+        console.log(box.x, box.y);
+        this.c.rect(box.x, box.y, 150, 100);
+        this.c.stroke();
+
+        // const alpha = 1.0,   // full opacity
+        // interval = setInterval(function () {
+        //   console.log(c);
+        //   alpha = alpha - 0.05; // decrease opacity (fade out)
+        //   if (alpha < 0) {
+        //     clearInterval(interval);
+        //   }
+        // }, 50); 
+  
+        e.target.value = "";
+        this.currentScore++;
+        this.score.innerText = "Score: " + this.currentScore;
+      }
+    })
+  }
+
 
   animate() {
     if (!this.gameOver) {
@@ -66,41 +95,29 @@ class Game {
       // console.log("--------------");
       // console.log(this.words);
 
-
-      this.input.addEventListener("input", e => {
-        const userInput = e.target.value;
-        if (this.words.includes(userInput)) {
-
-          this.words = this.words.filter(word => word !== userInput);
-          this.boxes = this.boxes.filter(box => box.text != userInput);
-
-          e.target.value = "";
-          this.currentScore++;
-          this.score.innerText = "Score: " + this.currentScore;
-        }
-      })
-
+      this.listenToInput();
+      
       const time = Date.now();
-
+      
       if (time - this.startTime > 60000) {
         this.spawnRateOfDescent += 0.5;
         this.startTime = time;
       }
-
+      
       if (time > (this.lastSpawn + this.spawnRate)) {
         this.lastSpawn = time;
         this.spawnRandomObject();
       }
-
+      
       requestAnimationFrame(this.animate);
-
+      
       this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-
+      
       // this.c.beginPath();
       // this.c.moveTo(0, this.spawnY);
       // this.c.lineTo(this.c.canvas.width, this.spawnY);
       // this.c.stroke();
-
+      
       for (let i = 0; i < this.boxes.length; i++) {
         const box = this.boxes[i];
         box.y += this.spawnRateOfDescent;
@@ -133,7 +150,7 @@ class Game {
     }
 
     const box = new Box(this.c, x, this.spawnY, word);
-
+    console.log(word + " x:" + x + " y: " + this.spawnY);
     this.words.push(word);
     this.boxes.push(box);
   }
