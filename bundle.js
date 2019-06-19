@@ -116,19 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.autoplay = false;
   music.style.display = "none";
   input.style.display = "none";
-  score.style.display = "none";
+  // score.style.display = "none";
 
   const startGameHelper = () => {
     startHeader.style.display = "none";
     startGame();
   }
 
-  window.onkeydown = (event) => {
-    if (event.keyCode === 13) {
-      startGameHelper();
-    }
-  }
-  
   startBtn.addEventListener("click", () => {
     startGameHelper();
   })
@@ -149,8 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (mutation.type === "childList") {
         const target = mutation.target;
         // console.log(target);
+        // console.log(target.classList);
         // console.log(mutation.target.innerText);
         // Animation here
+        target.classList.add('glow');
+        setTimeout(function () {
+          target.classList.remove('glow')
+        }, 500);
       }
     }
   };
@@ -233,8 +232,8 @@ class Game {
   }
 
   // function to start the game
-  playGame() {
-    this.score.style.display = "flex";
+  playGame() {    
+    this.score.innerText = "Score: 0";
     this.music.style.display = "flex";
     this.input.style.display = "flex";
 
@@ -266,9 +265,14 @@ class Game {
       // console.log("--------------");
       // console.log(this.words);
 
+
       this.input.addEventListener("input", e => {
         const userInput = e.target.value;
         if (this.words.includes(userInput)) {
+
+          this.words = this.words.filter(word => word !== userInput);
+          this.boxes = this.boxes.filter(box => box.text != userInput);
+
           e.target.value = "";
           this.currentScore++;
           this.score.innerText = "Score: " + this.currentScore;
@@ -312,6 +316,8 @@ class Game {
     } else {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span>Restart Game</span>";
+      this.score.innerText = "";
+      this.initializeGame();
     }
   }
 

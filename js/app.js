@@ -18,19 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
   audio.autoplay = false;
   music.style.display = "none";
   input.style.display = "none";
-  score.style.display = "none";
+  // score.style.display = "none";
 
   const startGameHelper = () => {
     startHeader.style.display = "none";
     startGame();
   }
 
-  window.onkeydown = (event) => {
-    if (event.keyCode === 13) {
-      startGameHelper();
-    }
-  }
-  
   startBtn.addEventListener("click", () => {
     startGameHelper();
   })
@@ -51,8 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (mutation.type === "childList") {
         const target = mutation.target;
         // console.log(target);
+        // console.log(target.classList);
         // console.log(mutation.target.innerText);
         // Animation here
+        target.classList.add('glow');
+        setTimeout(function () {
+          target.classList.remove('glow')
+        }, 500);
       }
     }
   };

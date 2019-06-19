@@ -92,7 +92,10 @@ body {
   font-size: 40px;
   color: #FFFFFF;
   font-family: Audiowide;
-  animation: neon5 1.5s ease-in-out infinite alternate;
+}
+
+.glow {
+  animation: neon5 1s ease-in-out infinite alternate;
 }
 
 @keyframes neon1 {
@@ -165,7 +168,8 @@ canvas {
   display:block;
   padding: 15px 0 15px 12px;
   font-weight: 400;
-  background: powderblue;
+  background-color: black;
+  background: repeating-linear-gradient(45deg, #2b2b2b 0%, #2b2b2b 10%, #222222 0%, #222222 50%) 0 / 15px 15px;
   outline: none;
   border: 1px solid rgba(0,0,0,0.3);
   border-radius: 4px;
@@ -173,6 +177,7 @@ canvas {
   text-indent: 60px;
   transition: all .3s ease-in-out;
   position: relative;
+  color:  #B6FF00; 
   font-size: 50px;
   font-family: 'Iceland', cursive;
   text-align: center;
