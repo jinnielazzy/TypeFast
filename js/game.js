@@ -153,7 +153,7 @@ class Game {
     }
 
     const box = new Box(this.c, x, this.spawnY, word);
-    console.log(word + " x:" + x + " y: " + this.spawnY);
+    // console.log(word + " x:" + x + " y: " + this.spawnY);
     this.words.push(word);
     this.boxes.push(box);
   }
