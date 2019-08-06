@@ -20,6 +20,7 @@ class Game {
   } 
 
   initializeGame() {
+    this.input.innerHTML = "";
     this.currentScore = 0;
     this.gameOver = false;
     this.spawnY = 25;
@@ -65,7 +66,7 @@ class Game {
         this.words = this.words.filter(word => word !== userInput);
         this.boxes = this.boxes.filter(box => box.text != userInput);
 
-        console.log(box.x, box.y);
+        // console.log(box.x, box.y);
         this.c.rect(box.x, box.y, 150, 100);
         this.c.stroke();
 
