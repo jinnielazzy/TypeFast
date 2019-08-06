@@ -30,6 +30,7 @@ class Game {
     this.boxes = [];
     this.words = [];
     this.startTime = Date.now();
+    this.inputField.autofocus = true;
     this.audio.load();
   }
 
