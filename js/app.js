@@ -29,13 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     startGameHelper();
   })
   
-  // console.log(score);
-  // score.addEventListener("DOMSubtreeModified", () => {
-  //   console.log("text changed")
-  //   // add Animation
-
-  // })
-  
   const config = {
     childList: true,
   };
@@ -44,9 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const mutation of mutationsList) {
       if (mutation.type === "childList") {
         const target = mutation.target;
-        // console.log(target);
-        // console.log(target.classList);
-        // console.log(mutation.target.innerText);
+    
         // Animation here
         target.classList.add('glow');
         setTimeout(function () {

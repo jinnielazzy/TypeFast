@@ -20,7 +20,6 @@ class Game {
   } 
 
   initializeGame() {
-    this.input.innerHTML = "";
     this.currentScore = 0;
     this.gameOver = false;
     this.spawnY = 25;
@@ -30,7 +29,6 @@ class Game {
     this.boxes = [];
     this.words = [];
     this.startTime = Date.now();
-    this.inputField.autofocus = true;
     this.audio.load();
   }
 
@@ -67,19 +65,9 @@ class Game {
         this.words = this.words.filter(word => word !== userInput);
         this.boxes = this.boxes.filter(box => box.text != userInput);
 
-        // console.log(box.x, box.y);
         this.c.rect(box.x, box.y, 150, 100);
         this.c.stroke();
 
-        // const alpha = 1.0,   // full opacity
-        // interval = setInterval(function () {
-        //   console.log(c);
-        //   alpha = alpha - 0.05; // decrease opacity (fade out)
-        //   if (alpha < 0) {
-        //     clearInterval(interval);
-        //   }
-        // }, 50); 
-  
         e.target.value = "";
         this.currentScore++;
         this.score.innerText = "Score: " + this.currentScore;
@@ -90,13 +78,7 @@ class Game {
 
   animate() {
     if (!this.gameOver) {
-      // testing code
-      // let testing = [];
-      // this.boxes.map(box => testing.push(box.text));
-      // console.log(testing.toString());
-      // console.log("--------------");
-      // console.log(this.words);
-
+    
       this.listenToInput();
       
       const time = Date.now();
@@ -132,6 +114,7 @@ class Game {
 
       if (this.boxes[0].y >= this.c.canvas.height) {
         this.gameOver = true;
+        this.inputField.value = "";
       }
     } else {
       this.startHeader.style.display = "flex";
@@ -145,7 +128,7 @@ class Game {
   spawnRandomObject() {
     // const str = this.randomString();
     const word = randomWords();
-    // console.log(word);
+
     let x = Math.random() * (this.c.canvas.width);
 
     while (x + this.c.measureText(word).width > this.c.canvas.width) {
@@ -153,7 +136,7 @@ class Game {
     }
 
     const box = new Box(this.c, x, this.spawnY, word);
-    // console.log(word + " x:" + x + " y: " + this.spawnY);
+    
     this.words.push(word);
     this.boxes.push(box);
   }

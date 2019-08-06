@@ -264,7 +264,7 @@ class Game {
         this.words = this.words.filter(word => word !== userInput);
         this.boxes = this.boxes.filter(box => box.text != userInput);
 
-        console.log(box.x, box.y);
+        // console.log(box.x, box.y);
         this.c.rect(box.x, box.y, 150, 100);
         this.c.stroke();
 
@@ -350,7 +350,7 @@ class Game {
     }
 
     const box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
-    console.log(word + " x:" + x + " y: " + this.spawnY);
+    // console.log(word + " x:" + x + " y: " + this.spawnY);
     this.words.push(word);
     this.boxes.push(box);
   }
