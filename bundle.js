@@ -105,18 +105,25 @@ document.addEventListener("DOMContentLoaded", () => {
   c.canvas.width = 800;
   c.canvas.height = 600;
 
-  const window = document;
+  // const window = document;
   const startBtn = document.getElementById("start-btn");
   const startHeader = document.getElementById("start-header");  
   const audio = document.getElementById("audio");
-  const music = document.getElementById("music");
-  const input = document.getElementById("input");
+  // const music = document.getElementById("music");
+  const input = document.getElementById("user-input");
   const score = document.getElementById("score");
+  const score_board = document.getElementById("score-broad");
+
+  let gameStart = false;
+  let points = localStorage.getItem("score") || 0;
+
+  // console.log(points);
+  score_board.innerHTML = `<span>Highest: ${points}</span>`;
 
   audio.autoplay = false;
-  music.style.display = "none";
-  input.style.display = "none";
-  // score.style.display = "none";
+  // music.style.display = "none";
+  // input.style.display = "none";
+  score.style.display = "none";
 
   const startGameHelper = () => {
     startHeader.style.display = "none";
@@ -125,26 +132,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.addEventListener("click", () => {
     startGameHelper();
-  })
-  
-  // console.log(score);
-  // score.addEventListener("DOMSubtreeModified", () => {
-  //   console.log("text changed")
-  //   // add Animation
-
-  // })
+  });
   
   const config = {
-    childList: true,
+    childList: true
   };
 
   const callback = (mutationsList, observer) => {
     for (const mutation of mutationsList) {
       if (mutation.type === "childList") {
         const target = mutation.target;
-        // console.log(target);
-        // console.log(target.classList);
-        // console.log(mutation.target.innerText);
+    
         // Animation here
         target.classList.add('glow');
         setTimeout(function () {
@@ -206,11 +204,14 @@ class Game {
     this.c = c;
     this.score = document.getElementById("score");
     this.audio = document.getElementById("audio");
-    this.music = document.getElementById("music");
-    this.input = document.getElementById("input");
-    this.inputField = document.getElementById("text");
+    // this.music = document.getElementById("music");
+    this.input = document.getElementById("user-input");
+    // this.inputField = document.getElementById("text");
     this.startHeader = document.getElementById("start-header");
     this.startBtn = document.getElementById("start-btn");
+    this.highest = document.querySelector("score-board");
+    this.highestBoard = document.getElementById("score-broad");
+
 
     // when game starts
     this.initializeGame();
@@ -220,6 +221,7 @@ class Game {
 
   initializeGame() {
     this.currentScore = 0;
+    this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = false;
     this.spawnY = 25;
     this.spawnRate = 1500;
@@ -233,25 +235,29 @@ class Game {
 
   // function to start the gamewet
   playGame() {    
+    this.score.style.display = "block";
     this.score.innerText = "Score: 0";
-    this.music.style.display = "flex";
-    this.input.style.display = "flex";
+    // this.music.style.display = "flex"; 
+    // this.input.style.display = "flex";
+    this.input.innerHTML = `<input type='text'
+                            placeholder='Start Typing....'
+                            id='text'
+                            autofocus>`
 
-    this.music.addEventListener("click", () => {
-      const span = this.music.firstChild;
-      if (this.music.className === "btn-mute") {
-        this.audio.pause();
-        this.music.className = "btn-unmute"
-        span.innerHTML = "PLAY"
-      } else {
-        this.audio.play();
-        this.music.className = "btn-mute"
-        span.innerHTML = "PAUSE"
-      }
-    })
+
+    // this.music.addEventListener("click", () => {
+    //   const span = this.music.firstChild;
+    //   if (this.music.className === "btn-mute") {
+    //     this.audio.pause();
+    //     this.music.className = "btn-unmute"
+    //     span.innerHTML = "PLAY"
+    //   } else {
+    //     this.audio.play();
+    //     this.music.className = "btn-mute"
+    //     span.innerHTML = "PAUSE"
+    //   }
+    // })
     
-    // this.input.autofo
-    this.inputField.autofocus = true;
     this.audio.play();
     this.animate();
   }
@@ -264,36 +270,22 @@ class Game {
         this.words = this.words.filter(word => word !== userInput);
         this.boxes = this.boxes.filter(box => box.text != userInput);
 
-        // console.log(box.x, box.y);
         this.c.rect(box.x, box.y, 150, 100);
         this.c.stroke();
 
-        // const alpha = 1.0,   // full opacity
-        // interval = setInterval(function () {
-        //   console.log(c);
-        //   alpha = alpha - 0.05; // decrease opacity (fade out)
-        //   if (alpha < 0) {
-        //     clearInterval(interval);
-        //   }
-        // }, 50); 
-  
         e.target.value = "";
         this.currentScore++;
         this.score.innerText = "Score: " + this.currentScore;
       }
+
+      if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
     })
   }
 
 
   animate() {
     if (!this.gameOver) {
-      // testing code
-      // let testing = [];
-      // this.boxes.map(box => testing.push(box.text));
-      // console.log(testing.toString());
-      // console.log("--------------");
-      // console.log(this.words);
-
+    
       this.listenToInput();
       
       const time = Date.now();
@@ -329,10 +321,16 @@ class Game {
 
       if (this.boxes[0].y >= this.c.canvas.height) {
         this.gameOver = true;
+        // this.inputField.value = "";
       }
     } else {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span>Restart Game</span>";
+
+      let highestScore = localStorage.getItem("score");
+      highestScore = Math.max(highestScore, this.currentScore);
+      localStorage.setItem("score", highestScore);
+
       this.score.innerText = "";
       this.audio.pause();
       this.initializeGame();
@@ -342,7 +340,7 @@ class Game {
   spawnRandomObject() {
     // const str = this.randomString();
     const word = randomWords();
-    // console.log(word);
+
     let x = Math.random() * (this.c.canvas.width);
 
     while (x + this.c.measureText(word).width > this.c.canvas.width) {
@@ -350,7 +348,7 @@ class Game {
     }
 
     const box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
-    // console.log(word + " x:" + x + " y: " + this.spawnY);
+    
     this.words.push(word);
     this.boxes.push(box);
   }

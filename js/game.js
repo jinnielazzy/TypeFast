@@ -7,11 +7,14 @@ class Game {
     this.c = c;
     this.score = document.getElementById("score");
     this.audio = document.getElementById("audio");
-    this.music = document.getElementById("music");
-    this.input = document.getElementById("input");
-    this.inputField = document.getElementById("text");
+    // this.music = document.getElementById("music");
+    this.input = document.getElementById("user-input");
+    // this.inputField = document.getElementById("text");
     this.startHeader = document.getElementById("start-header");
     this.startBtn = document.getElementById("start-btn");
+    this.highest = document.querySelector("score-board");
+    this.highestBoard = document.getElementById("score-broad");
+
 
     // when game starts
     this.initializeGame();
@@ -21,6 +24,7 @@ class Game {
 
   initializeGame() {
     this.currentScore = 0;
+    this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = false;
     this.spawnY = 25;
     this.spawnRate = 1500;
@@ -34,25 +38,29 @@ class Game {
 
   // function to start the gamewet
   playGame() {    
+    this.score.style.display = "block";
     this.score.innerText = "Score: 0";
-    this.music.style.display = "flex";
-    this.input.style.display = "flex";
+    // this.music.style.display = "flex"; 
+    // this.input.style.display = "flex";
+    this.input.innerHTML = `<input type='text'
+                            placeholder='Start Typing....'
+                            id='text'
+                            autofocus>`
 
-    this.music.addEventListener("click", () => {
-      const span = this.music.firstChild;
-      if (this.music.className === "btn-mute") {
-        this.audio.pause();
-        this.music.className = "btn-unmute"
-        span.innerHTML = "PLAY"
-      } else {
-        this.audio.play();
-        this.music.className = "btn-mute"
-        span.innerHTML = "PAUSE"
-      }
-    })
+
+    // this.music.addEventListener("click", () => {
+    //   const span = this.music.firstChild;
+    //   if (this.music.className === "btn-mute") {
+    //     this.audio.pause();
+    //     this.music.className = "btn-unmute"
+    //     span.innerHTML = "PLAY"
+    //   } else {
+    //     this.audio.play();
+    //     this.music.className = "btn-mute"
+    //     span.innerHTML = "PAUSE"
+    //   }
+    // })
     
-    // this.input.autofo
-    this.inputField.autofocus = true;
     this.audio.play();
     this.animate();
   }
@@ -72,6 +80,8 @@ class Game {
         this.currentScore++;
         this.score.innerText = "Score: " + this.currentScore;
       }
+
+      if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
     })
   }
 
@@ -114,11 +124,16 @@ class Game {
 
       if (this.boxes[0].y >= this.c.canvas.height) {
         this.gameOver = true;
-        this.inputField.value = "";
+        // this.inputField.value = "";
       }
     } else {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span>Restart Game</span>";
+
+      let highestScore = localStorage.getItem("score");
+      highestScore = Math.max(highestScore, this.currentScore);
+      localStorage.setItem("score", highestScore);
+
       this.score.innerText = "";
       this.audio.pause();
       this.initializeGame();
