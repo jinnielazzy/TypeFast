@@ -7,18 +7,25 @@ document.addEventListener("DOMContentLoaded", () => {
   c.canvas.width = 800;
   c.canvas.height = 600;
 
-  const window = document;
+  // const window = document;
   const startBtn = document.getElementById("start-btn");
   const startHeader = document.getElementById("start-header");  
   const audio = document.getElementById("audio");
-  const music = document.getElementById("music");
-  const input = document.getElementById("input");
+  // const music = document.getElementById("music");
+  const input = document.getElementById("user-input");
   const score = document.getElementById("score");
+  const score_board = document.getElementById("score-broad");
+
+  let gameStart = false;
+  let points = localStorage.getItem("score") || 0;
+
+  // console.log(points);
+  score_board.innerHTML = `<span>Highest: ${points}</span>`;
 
   audio.autoplay = false;
-  music.style.display = "none";
-  input.style.display = "none";
-  // score.style.display = "none";
+  // music.style.display = "none";
+  // input.style.display = "none";
+  score.style.display = "none";
 
   const startGameHelper = () => {
     startHeader.style.display = "none";
@@ -27,10 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startBtn.addEventListener("click", () => {
     startGameHelper();
-  })
+  });
   
   const config = {
-    childList: true,
+    childList: true
   };
 
   const callback = (mutationsList, observer) => {

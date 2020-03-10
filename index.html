@@ -13,7 +13,9 @@
   <div class="header-container">
     <div class="score-container">
       <span id="score"></span>
-      <button class="btn-mute" id="music"><span>PAUSE MUSIC</span></button>
+      <!-- <button class="btn-mute" id="music"><span>PAUSE MUSIC</span></button> -->
+    </div>
+    <div id="score-broad" class="glow">
     </div>
     <!-- <div class="music">
     </div> -->
@@ -23,15 +25,17 @@
     <div class="main-header-container" id="main-header">
       <div id="start-header">
         <button id="start-btn"><span>Start Game</span></button>
+        <div id="instruction">
+          <span>Click start game !!</span>
+        </div>
       </div>
     </div>
     <div class="board-container">
       <canvas width="1000" height="800" id="canvas"></canvas>
-      <script type="application/javascript" src="./bundle.js"></script>
-      <div class="user-input" id="input">
-        <input type="text" placeholder="Start Typing...." id="text">
+      <div id="user-input">
       </div>
     </div>  
   </div>
+  <script type="application/javascript" src="./bundle.js"></script>
 </body>
 </html>

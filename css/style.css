@@ -32,8 +32,17 @@ body {
   margin-top: 100px;
 }
 
+#instruction {
+  color: #B6FF00;
+}
+
+#score-broad {
+  color: #B6FF00;
+}
+
 #start-header {
   display: flex;
+  flex-direction: column;
 }
 
 .difficulty {
@@ -171,7 +180,7 @@ canvas {
   display: inline-block;
 }
 
-#input input {
+#user-input input {
   width: 100%;
   display:block;
   padding: 15px 0 15px 12px;
@@ -191,7 +200,7 @@ canvas {
   text-align: center;
 }
 
-#input input:focus {
+#user-input input:focus {
   background: none;
   text-indent: 12px;
   box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
