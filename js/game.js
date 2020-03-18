@@ -1,4 +1,7 @@
 import Box from "./box";
+import LinkedList from './linkedlist';
+import Node from './node';
+
 const randomWords = require('random-words');
 
 class Game {
@@ -24,11 +27,11 @@ class Game {
     this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = false;
     this.spawnY = 25;
-    this.spawnRate = 2000;
+    this.spawnRate = 2000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
-    this.boxes = [];
-    this.words = [];
+    this.boxes = new LinkedList();
+    this.words = new Map();
     this.startTime = Date.now();
     this.audio.loop = true;
     this.audio.load();
@@ -48,28 +51,24 @@ class Game {
   listenToInput() {
     this.input.addEventListener("input", e => {
       const userInput = e.target.value;
+      if (this.words.has(userInput)) {
+        let node = this.words.get(userInput);
+        let box = node.val;
 
-      console.log(userInput);
-      if (this.words.includes(userInput)) {
-        const box = this.boxes.find(box => box.text === userInput);
-        this.words = this.words.filter(word => word !== userInput);
-        this.boxes = this.boxes.filter(box => box.text != userInput);
-  
-        this.c.rect(box.x, box.y, 150, 100);
-        this.c.stroke();
-  
+        this.boxes.remove(node);
+        this.words.delete(userInput);
+
         e.target.value = "";
         this.currentScore++;
-        this.score.innerText = "Score: " + this.currentScore;
+        this.score.innerText = `Score: ${this.currentScore}`;
       }
     })
   }
   
   animate() {
     if (!this.gameOver) {
-      // this.listenToInput();
-      console.log(this.boxes);
-      console.log(this.words);
+      // console.log(this.boxes);
+      // console.log(this.words);
       
       const time = Date.now();
       if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
@@ -85,9 +84,6 @@ class Game {
         this.startTime = time;
       }
       
-      // console.log(this.spawnRate)
-      // console.log(this.spawnRateOfDescent)
-      
       if (time > (this.lastSpawn + this.spawnRate)) {
         this.lastSpawn = time;
         this.spawnRandomObject();
@@ -96,14 +92,10 @@ class Game {
       requestAnimationFrame(this.animate);
       
       this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-      
-      // this.c.beginPath();
-      // this.c.moveTo(0, this.spawnY);
-      // this.c.lineTo(this.c.canvas.width, this.spawnY);
-      // this.c.stroke();
-      
-      for (let i = 0; i < this.boxes.length; i++) {
-        const box = this.boxes[i];
+    
+      this.boxes.reset();
+      while (this.boxes.hasNext()) {
+        let box = this.boxes.next().val;
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
         this.c.fillStyle = "#B6FF00";
@@ -112,7 +104,7 @@ class Game {
         this.c.closePath();
       }
       
-      if (this.boxes[0].y >= this.c.canvas.height) this.gameOver = true;
+      if (this.boxes.head.val.y >= this.c.canvas.height) this.gameOver = true;
     } else {
         this.startHeader.style.display = "flex";
         this.startBtn.innerHTML = "<span>Restart Game</span>";
@@ -130,21 +122,21 @@ class Game {
   spawnRandomObject() {
     const word = randomWords();
 
-    let x = Math.random() * (this.c.canvas.width);
+    let x = Math.random() * 900;
 
     // console.log(word);
-    // console.log(x, this.c.measureText(word).width) 
-    // console.log(x + this.c.measureText(word).width, this.c.canvas.width);
+    // console.log(`x:${x}, len: ${this.c.measureText(word).width}`); 
+    // console.log(`total width: ${x + this.c.measureText(word).width}`);
     while (x + this.c.measureText(word).width > this.c.canvas.width + 20) {
-      console.log("out of bound");
+      // console.log("out of bound");
       x -= 100;
     }
 
-    // console.log(x, this.spawnY)
-    const box = new Box(this.c, x, this.spawnY, word);
-    
-    this.words.push(word);
-    this.boxes.push(box);
+    // console.log(`x:${x}, y:${this.spawnY}`)
+    let box = new Box(this.c, x, this.spawnY, word);
+    let node = new Node(box);
+    this.boxes.insert(node);
+    this.words.set(word, node);
   }
 
 }
