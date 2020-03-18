@@ -27,13 +27,31 @@ class Game {
     this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = false;
     this.spawnY = 25;
-    this.spawnRate = 1500;
+    this.spawnRate = 2000;
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
     this.boxes = [];
     this.words = [];
     this.startTime = Date.now();
     this.audio.load();
+
+    this.input.addEventListener("input", e => {
+      const userInput = e.target.value;
+      if (this.words.includes(userInput)) {
+        const box = this.boxes.find(box => box.text === userInput);
+        this.words = this.words.filter(word => word !== userInput);
+        this.boxes = this.boxes.filter(box => box.text != userInput);
+  
+        this.c.rect(box.x, box.y, 150, 100);
+        this.c.stroke();
+  
+        e.target.value = "";
+        this.currentScore++;
+        this.score.innerText = "Score: " + this.currentScore;
+      }
+  
+      if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
+    })
   }
 
   // function to start the gamewet
@@ -41,13 +59,8 @@ class Game {
     this.score.style.display = "block";
     this.score.innerText = "Score: 0";
     // this.music.style.display = "flex"; 
-    // this.input.style.display = "flex";
-    this.input.innerHTML = `<input type='text'
-                            placeholder='Start Typing....'
-                            id='text'
-                            autofocus>`
-
-
+    this.input.style.display = "flex";                          
+                            
     // this.music.addEventListener("click", () => {
     //   const span = this.music.firstChild;
     //   if (this.music.className === "btn-mute") {
@@ -60,43 +73,29 @@ class Game {
     //     span.innerHTML = "PAUSE"
     //   }
     // })
-    
     this.audio.play();
     this.animate();
   }
   
-  listenToInput() {
-    this.input.addEventListener("input", e => {
-      const userInput = e.target.value;
-      if (this.words.includes(userInput)) {
-        const box = this.boxes.find(box => box.text === userInput);
-        this.words = this.words.filter(word => word !== userInput);
-        this.boxes = this.boxes.filter(box => box.text != userInput);
-
-        this.c.rect(box.x, box.y, 150, 100);
-        this.c.stroke();
-
-        e.target.value = "";
-        this.currentScore++;
-        this.score.innerText = "Score: " + this.currentScore;
-      }
-
-      if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
-    })
-  }
-
+  // listenToInput() {
+  // }
 
   animate() {
-    if (!this.gameOver) {
-    
-      this.listenToInput();
-      
+    // if (!this.gameOver) {
+      // this.listenToInput();
+      // console.log(this.boxes);
+      // console.log(this.words);
+
       const time = Date.now();
       
       if (time - this.startTime > 60000) {
         this.spawnRateOfDescent += 0.5;
+        this.spawnRate -= 500;
         this.startTime = time;
       }
+
+      console.log(this.spawnRate)
+      console.log(this.spawnRateOfDescent)
       
       if (time > (this.lastSpawn + this.spawnRate)) {
         this.lastSpawn = time;
@@ -122,22 +121,22 @@ class Game {
         this.c.closePath();
       }
 
-      if (this.boxes[0].y >= this.c.canvas.height) {
-        this.gameOver = true;
-        // this.inputField.value = "";
-      }
-    } else {
-      this.startHeader.style.display = "flex";
-      this.startBtn.innerHTML = "<span>Restart Game</span>";
+      // if (this.boxes[0].y >= this.c.canvas.height) {
+      //   this.gameOver = true;
+      //   // this.inputField.value = "";
+      // }
+        // } else {
+        //   this.startHeader.style.display = "flex";
+        //   this.startBtn.innerHTML = "<span>Restart Game</span>";
 
-      let highestScore = localStorage.getItem("score");
-      highestScore = Math.max(highestScore, this.currentScore);
-      localStorage.setItem("score", highestScore);
+        //   let highestScore = localStorage.getItem("score");
+        //   highestScore = Math.max(highestScore, this.currentScore);
+        //   localStorage.setItem("score", highestScore);
 
-      this.score.innerText = "";
-      this.audio.pause();
-      this.initializeGame();
-    }
+        //   this.score.innerText = "";
+        //   this.audio.pause();
+        //   this.initializeGame();
+        // }
   }
 
   spawnRandomObject() {
@@ -146,10 +145,15 @@ class Game {
 
     let x = Math.random() * (this.c.canvas.width);
 
+    console.log(word);
+    console.log(x, this.c.measureText(word).width) 
+    console.log(x + this.c.measureText(word).width, this.c.canvas.width);
     while (x + this.c.measureText(word).width > this.c.canvas.width) {
+      console.log("out of bound");
       x -= 100;
     }
 
+    console.log(x, this.spawnY)
     const box = new Box(this.c, x, this.spawnY, word);
     
     this.words.push(word);
