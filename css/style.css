@@ -108,7 +108,7 @@ body {
 }
 
 /* .glow {
-  animation: neon5 1s ease-in-out infinite alternate;
+  animation: neon5 0.5s ease-in-out infinite alternate;
 } */
 
 /* @keyframes neon1 {
@@ -118,9 +118,9 @@ body {
   to {
     text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px rgba(22, 76, 167, 1), 0 0 35px rgba(22, 76, 167, 1), 0 0 40px rgba(22, 76, 167, 1), 0 0 50px rgba(22, 76, 167, 1), 0 0 75px rgba(22, 76, 167, 1);
   }
-}
+} */
 
-@keyframes neon5 {
+/* @keyframes neon5 {
   from {
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF9900, 0 0 70px #FF9900, 0 0 80px #FF9900, 0 0 100px #FF9900, 0 0 150px #FF9900;
   }

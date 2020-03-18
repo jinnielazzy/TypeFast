@@ -194,6 +194,11 @@ class Box {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _box__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./box */ "./js/box.js");
+/* harmony import */ var _linkedlist__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./linkedlist */ "./js/linkedlist.js");
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node */ "./js/node.js");
+
+
+
 
 const randomWords = __webpack_require__(/*! random-words */ "./node_modules/random-words/index.js");
 
@@ -220,11 +225,11 @@ class Game {
     this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = false;
     this.spawnY = 25;
-    this.spawnRate = 2000;
+    this.spawnRate = 2000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
-    this.boxes = [];
-    this.words = [];
+    this.boxes = new _linkedlist__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.words = new Map();
     this.startTime = Date.now();
     this.audio.loop = true;
     this.audio.load();
@@ -244,28 +249,24 @@ class Game {
   listenToInput() {
     this.input.addEventListener("input", e => {
       const userInput = e.target.value;
+      if (this.words.has(userInput)) {
+        let node = this.words.get(userInput);
+        let box = node.val;
 
-      console.log(userInput);
-      if (this.words.includes(userInput)) {
-        const box = this.boxes.find(box => box.text === userInput);
-        this.words = this.words.filter(word => word !== userInput);
-        this.boxes = this.boxes.filter(box => box.text != userInput);
-  
-        this.c.rect(box.x, box.y, 150, 100);
-        this.c.stroke();
-  
+        this.boxes.remove(node);
+        this.words.delete(userInput);
+
         e.target.value = "";
         this.currentScore++;
-        this.score.innerText = "Score: " + this.currentScore;
+        this.score.innerText = `Score: ${this.currentScore}`;
       }
     })
   }
   
   animate() {
     if (!this.gameOver) {
-      // this.listenToInput();
-      console.log(this.boxes);
-      console.log(this.words);
+      // console.log(this.boxes);
+      // console.log(this.words);
       
       const time = Date.now();
       if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
@@ -281,9 +282,6 @@ class Game {
         this.startTime = time;
       }
       
-      // console.log(this.spawnRate)
-      // console.log(this.spawnRateOfDescent)
-      
       if (time > (this.lastSpawn + this.spawnRate)) {
         this.lastSpawn = time;
         this.spawnRandomObject();
@@ -292,14 +290,10 @@ class Game {
       requestAnimationFrame(this.animate);
       
       this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-      
-      // this.c.beginPath();
-      // this.c.moveTo(0, this.spawnY);
-      // this.c.lineTo(this.c.canvas.width, this.spawnY);
-      // this.c.stroke();
-      
-      for (let i = 0; i < this.boxes.length; i++) {
-        const box = this.boxes[i];
+    
+      this.boxes.reset();
+      while (this.boxes.hasNext()) {
+        let box = this.boxes.next().val;
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
         this.c.fillStyle = "#B6FF00";
@@ -308,7 +302,7 @@ class Game {
         this.c.closePath();
       }
       
-      if (this.boxes[0].y >= this.c.canvas.height) this.gameOver = true;
+      if (this.boxes.head.val.y >= this.c.canvas.height) this.gameOver = true;
     } else {
         this.startHeader.style.display = "flex";
         this.startBtn.innerHTML = "<span>Restart Game</span>";
@@ -326,26 +320,115 @@ class Game {
   spawnRandomObject() {
     const word = randomWords();
 
-    let x = Math.random() * (this.c.canvas.width);
+    let x = Math.random() * 900;
 
     // console.log(word);
-    // console.log(x, this.c.measureText(word).width) 
-    // console.log(x + this.c.measureText(word).width, this.c.canvas.width);
+    // console.log(`x:${x}, len: ${this.c.measureText(word).width}`); 
+    // console.log(`total width: ${x + this.c.measureText(word).width}`);
     while (x + this.c.measureText(word).width > this.c.canvas.width + 20) {
-      console.log("out of bound");
+      // console.log("out of bound");
       x -= 100;
     }
 
-    // console.log(x, this.spawnY)
-    const box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
-    
-    this.words.push(word);
-    this.boxes.push(box);
+    // console.log(`x:${x}, y:${this.spawnY}`)
+    let box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
+    let node = new _node__WEBPACK_IMPORTED_MODULE_2__["default"](box);
+    this.boxes.insert(node);
+    this.words.set(word, node);
   }
 
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Game);
+
+/***/ }),
+
+/***/ "./js/linkedlist.js":
+/*!**************************!*\
+  !*** ./js/linkedlist.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node */ "./js/node.js");
+
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+  }
+
+  insert(node) {
+    if (this.size === 0) {
+      this.head = node;
+      this.tail = node;
+      this.curr = this.head;
+    } else {
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
+    }
+
+    this.size++;
+  }
+
+  remove(node) {
+    if (this.size === 0) {
+      this.head = null;
+      this.tail = null;
+    } else if (node === this.head) {
+      this.head = node.next;
+    } else if (node === this.tail) {
+      this.tail = node.prev;
+    } else {
+      node.prev.next = node.next;
+      node.next.prev = node.prev;
+    }
+
+    this.size--;
+  }
+
+  reset() {
+    this.curr = this.head;
+  }
+
+  hasNext() {
+    return this.curr !== null;
+  }
+
+  next() {
+    let node = this.curr;
+    this.curr = node.next;
+    return node;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (LinkedList);
+
+/***/ }),
+
+/***/ "./js/node.js":
+/*!********************!*\
+  !*** ./js/node.js ***!
+  \********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.prev = null;
+    this.next = null;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Node);
 
 /***/ }),
 
