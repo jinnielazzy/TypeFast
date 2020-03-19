@@ -192,6 +192,7 @@ class Game {
     this.startBtn = document.getElementById("start-btn");
     this.highest = document.querySelector("score-board");
     this.highestBoard = document.getElementById("score-broad");
+    this.lifeBoard = document.querySelector(".life");
 
     this.initializeGame();
     this.animate = this.animate.bind(this);
@@ -199,9 +200,11 @@ class Game {
   } 
 
   initializeGame() {
+    this.life = 3;
     this.currentScore = 0;
     this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = true;
+    this.pause = true;
     this.spawnY = 25;
     this.spawnRate = 2000; 
     this.spawnRateOfDescent = 0.4;
@@ -225,12 +228,16 @@ class Game {
     this.inputField.focus();                    
     this.audio.play();
     this.gameOver = false;
+    this.pause = false;
     this.animate();
   }
     
   keyDown(e) {
     if (e.keyCode === 27 && !this.gameOver) this.inputField.value = "";
-    if (e.keyCode === 13 && this.gameOver) this.playGame();
+    if (e.keyCode === 13) {
+      if (this.gameOver) this.playGame();
+      // else this.pause = !this.pause;
+    }
   }
 
   listenToKey() {
@@ -255,10 +262,7 @@ class Game {
   }
   
   animate() {
-    if (!this.gameOver) {
-      // console.log(this.boxes);
-      // console.log(this.words);
-      
+    if (!this.gameOver) {  
       const time = Date.now();
       if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
       
@@ -278,12 +282,12 @@ class Game {
         this.spawnRandomObject();
       }
       
+      this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
       requestAnimationFrame(this.animate);
       
-      this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-    
       if (this.boxes.size === 0) return;
-
+      console.log(this.boxes.head.val.text)
+      
       this.boxes.reset();
       while (this.boxes.hasNext()) {
         let box = this.boxes.next().val;
@@ -295,19 +299,25 @@ class Game {
         this.c.closePath();
       }
       
-      if (this.boxes.head.val.y >= this.c.canvas.height) this.gameOver = true;
-    } else {
-        this.startHeader.style.display = "flex";
-        this.startBtn.innerHTML = "<span>Restart Game</span>";
-
-        let highestScore = localStorage.getItem("score");
-        highestScore = Math.max(highestScore, this.currentScore);
-        localStorage.setItem("score", highestScore);
-
-        this.score.innerText = "";
-        this.audio.pause();
-        this.initializeGame();
+      if (this.boxes.head.val.y >= this.c.canvas.height) {
+        this.life--;
+        this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
+        if (this.life === 0) this.gameOver = true;
+        let head = this.boxes.head;
+        this.boxes.remove(head);
       }
+    } else {
+      this.startHeader.style.display = "flex";
+      this.startBtn.innerHTML = "<span style='style: >Restart Game</span>";
+
+      let highestScore = localStorage.getItem("score");
+      highestScore = Math.max(highestScore, this.currentScore);
+      localStorage.setItem("score", highestScore);
+
+      this.score.innerText = "";
+      this.audio.pause();
+      this.initializeGame();
+    }
   }
 
   spawnRandomObject() {
@@ -315,15 +325,10 @@ class Game {
 
     let x = Math.random() * 900;
 
-    // console.log(word);
-    // console.log(`x:${x}, len: ${this.c.measureText(word).width}`); 
-    // console.log(`total width: ${x + this.c.measureText(word).width}`);
     while (x + this.c.measureText(word).width > this.c.canvas.width + 20) {
-      // console.log("out of bound");
       x -= 100;
     }
 
-    // console.log(`x:${x}, y:${this.spawnY}`)
     let box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
     let node = new _node__WEBPACK_IMPORTED_MODULE_2__["default"](box);
     this.boxes.insert(node);
