@@ -25,7 +25,7 @@ class Game {
   initializeGame() {
     this.currentScore = 0;
     this.highScore = parseInt(localStorage.getItem("score")) || 0;
-    this.gameOver = false;
+    this.gameOver = true;
     this.spawnY = 25;
     this.spawnRate = 2000; 
     this.spawnRateOfDescent = 0.4;
@@ -36,18 +36,31 @@ class Game {
     this.audio.loop = true;
     this.audio.load();
     this.listenToInput();
+    this.listenToKey();
   }
   
   // function to start the gamewet
   playGame() {    
+    this.startHeader.style.display = "none";
     this.score.style.display = "block";
     this.score.innerText = "Score: 0";
     this.input.style.display = "flex";   
-    this.inputField.value = "";                       
+    this.inputField.value = "";   
+    this.inputField.focus();                    
     this.audio.play();
+    this.gameOver = false;
     this.animate();
   }
     
+  keyDown(e) {
+    if (e.keyCode === 27 && !this.gameOver) this.inputField.value = "";
+    if (e.keyCode === 13 && this.gameOver) this.playGame();
+  }
+
+  listenToKey() {
+    document.addEventListener("keydown", (e) => this.keyDown(e));
+  }
+
   listenToInput() {
     this.input.addEventListener("input", e => {
       const userInput = e.target.value;
@@ -93,6 +106,8 @@ class Game {
       
       this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
     
+      if (this.boxes.size === 0) return;
+
       this.boxes.reset();
       while (this.boxes.hasNext()) {
         let box = this.boxes.next().val;

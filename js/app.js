@@ -5,28 +5,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const c = canvas.getContext('2d');
 
   const startBtn = document.getElementById("start-btn");
-  const startHeader = document.getElementById("start-header");  
-  const audio = document.getElementById("audio");
   const score = document.getElementById("score");
   const score_board = document.getElementById("score-broad");
+  const points = localStorage.getItem("score") || 0;
 
-  let gameStart = false;
-  let points = localStorage.getItem("score") || 0;
+  const game = new Game(c);
 
-  score_board.innerHTML = `<span>Highest: ${points}</span>`;
-
-  audio.autoplay = false;
+  score_board.innerHTML = `<span>Highest: ${points} </span>`;
   score.style.display = "none";
 
-  const startGameHelper = () => {
-    startHeader.style.display = "none";
-    startGame();
-  }
-
   startBtn.addEventListener("click", () => {
-    startGameHelper();
+    game.playGame();
   });
-  
+
   // const config = {
   //   childList: true
   // };
@@ -47,17 +38,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // const observer = new MutationObserver(callback);
   // observer.observe(score, config);
-
-  function startGame() {
-    let game = new Game(c);
-
-    // c.canvas.width = window.innerWidth;
-    // c.canvas.height = window.innerHeight;
-
-    // console.log(c.canvas.width);
-    // console.log(c.canvas.height);
-    // console.dir(canvas)
-
-    game.playGame();
-  }
 });
