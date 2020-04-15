@@ -10,33 +10,37 @@
   <title>TypeFast</title>
 </head>
 <body>
-  <div class="header-container">
-    <div class="score-container">
-      <span id="score"></span>
-      <!-- <button class="btn-mute" id="music"><span>PAUSE MUSIC</span></button> -->
-    </div>
-    <div id="score-broad" class="glow">
-    </div>
-  </div>
-  
-  <div class="life">
-    <span>life: 3</span>
-  </div>
-  <div class="main-container">
-    <div class="main-header-container" id="main-header">
-      <div id="start-header">
-        <button id="start-btn"><span>Start Game</span></button>
-        <div id="instruction">
-          <span>Click start game Or Press enter!!</span>
+  <div id="wrapper">
+    <div id="game">
+      <div id="board">
+        <canvas width="1000" height="800" id="canvas"></canvas>
+        <div id="user-input">
+          <input type='text' placeholder='Start Typing....' id='text'>
         </div>
+      </div>  
+    </div>
+
+    <div id="menu">
+      <div id="start-btn">
+        <button>Start Game</button>
+      </div>
+      <div id="instruction">
+        <ul>
+          <li>Press 'Enter' or Click 'Start Game' to start</li>
+          <li>You have total 3 lives</li>
+          <li>Type as fast as you can to beat your record</li>
+        </ul>
+      </div>
+      <div id="current-score">
+        <span>Score: 0</span>
+      </div>
+      <div id="highest-score">
+        <span>Hightest Score: 0</span>
+      </div>
+      <div id="life">
+        <span>life: 3</span>
       </div>
     </div>
-    <div class="board-container">
-      <canvas width="1000" height="800" id="canvas"></canvas>
-      <div id="user-input">
-        <input type='text' placeholder='Start Typing....' id='text'>
-      </div>
-    </div>  
   </div>
   <script type="application/javascript" src="./bundle.js"></script>
 </body>

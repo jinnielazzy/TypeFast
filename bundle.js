@@ -279,7 +279,7 @@ class Game {
         this.startTime = time;
       }
       
-      console.log(time, this.lastSpawn, this.spawnRate);
+      // console.log(time, this.lastSpawn, this.spawnRate);
       if (time - this.lastSpawn > this.spawnRate) {
         this.lastSpawn = time;
         this.spawnRandomObject();
@@ -301,13 +301,13 @@ class Game {
         this.c.closePath();
       }
       
-      // if (this.boxes.head.val.y >= this.c.canvas.height) {
-      //   this.life--;
-      //   this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
-      //   if (this.life === 0) this.gameOver = true;
-      //   let head = this.boxes.head;
-      //   this.boxes.remove(head);
-      // }
+      if (this.boxes.head.val.y >= this.c.canvas.height) {
+        this.life--;
+        this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
+        if (this.life === 0) this.gameOver = true;
+        let head = this.boxes.head;
+        this.boxes.remove(head);
+      }
     } else {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span style='style: >Restart Game</span>";
