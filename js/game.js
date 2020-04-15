@@ -30,7 +30,7 @@ class Game {
     this.gameOver = true;
     this.pause = true;
     this.spawnY = 25;
-    this.spawnRate = 2000; 
+    this.spawnRate = 1000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
     this.boxes = new LinkedList();
@@ -50,7 +50,7 @@ class Game {
     this.input.style.display = "flex";   
     this.inputField.value = "";   
     this.inputField.focus();                    
-    this.audio.play();
+    // this.audio.play();
     this.gameOver = false;
     this.pause = false;
     this.animate();
@@ -91,17 +91,20 @@ class Game {
       if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
       
       if (time - this.startTime > 60000) {
-        this.spawnRateOfDescent += 0.5;
-        if (this.spawnRate <= 600) {
-          this.spawnRate -= 100;
-        } else {
-          this.spawnRate -= 600;
-        } 
+        // this.spawnRateOfDescent += 0.5;
+        // if (this.spawnRate <= 600) {
+        //   this.spawnRate -= 100;
+        // } else {
+        //   this.spawnRate -= 600;
+        // } 
         
+        this.spawnRateOfDescent *= 1.5;
+        this.spawnRate *= 0.99;
         this.startTime = time;
       }
       
-      if (time > (this.lastSpawn + this.spawnRate)) {
+      console.log(time, this.lastSpawn, this.spawnRate);
+      if (time - this.lastSpawn > this.spawnRate) {
         this.lastSpawn = time;
         this.spawnRandomObject();
       }
@@ -110,7 +113,6 @@ class Game {
       requestAnimationFrame(this.animate);
       
       if (this.boxes.size === 0) return;
-      console.log(this.boxes.head.val.text)
       
       this.boxes.reset();
       while (this.boxes.hasNext()) {
@@ -123,13 +125,13 @@ class Game {
         this.c.closePath();
       }
       
-      if (this.boxes.head.val.y >= this.c.canvas.height) {
-        this.life--;
-        this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
-        if (this.life === 0) this.gameOver = true;
-        let head = this.boxes.head;
-        this.boxes.remove(head);
-      }
+      // if (this.boxes.head.val.y >= this.c.canvas.height) {
+      //   this.life--;
+      //   this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
+      //   if (this.life === 0) this.gameOver = true;
+      //   let head = this.boxes.head;
+      //   this.boxes.remove(head);
+      // }
     } else {
       this.startHeader.style.display = "flex";
       this.startBtn.innerHTML = "<span style='style: >Restart Game</span>";
@@ -146,10 +148,9 @@ class Game {
 
   spawnRandomObject() {
     const word = randomWords();
-
     let x = Math.random() * 900;
 
-    while (x + this.c.measureText(word).width > this.c.canvas.width + 20) {
+    while (x + this.c.measureText(word).width > 800) {
       x -= 100;
     }
 
