@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const game = new _game__WEBPACK_IMPORTED_MODULE_0__["default"](c);
   
   let highest = 0;
-  console.log(value)
   if (value !== null) highest = parseInt(value);
   
   highestscore.innerHTML = `<span>Highest: ${highest} </span>`;
@@ -187,10 +186,14 @@ class Game {
   constructor(c) {
     // initialize board, boxes, speed, music
     this.c = c;
+    this.boxes = new _linkedlist__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.words = new Map();
   
     this.seleectElements();
     this.initializeGame();
-
+    this.listenToInput();
+    this.listenToKey();
+    
     this.animate = this.animate.bind(this);
     this.spawnRandomObject = this.spawnRandomObject.bind(this);
   } 
@@ -212,8 +215,6 @@ class Game {
     this.spawnRate = 1000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
-    this.boxes = new _linkedlist__WEBPACK_IMPORTED_MODULE_1__["default"]();
-    this.words = new Map();
     this.startTime = Date.now();
     this.audio.loop = true;
     this.audio.load();
@@ -221,8 +222,6 @@ class Game {
     let value = localStorage.getItem("score");
     this.highestScore = value !== null ? parseInt(value) : 0;
 
-    this.listenToInput();
-    this.listenToKey();
   }
   
   // function to start the gamewet
@@ -308,17 +307,21 @@ class Game {
       
       if (this.boxes.head.val.y >= this.c.canvas.height) {
         this.life--;
+        console.log(this.life);
         this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
         if (this.life === 0) this.gameOver = true;
         let head = this.boxes.head;
         this.boxes.remove(head);
+        this.words.delete(head.val.text);
       }
     } else {
+      this.boxes.initialize();
+      this.words.clear();
       this.startBtn.disabled = false;
       this.startBtn.innerText = "Restart Game";
       localStorage.setItem("score", this.highestScore);
 
-      this.score.innerText = "";
+      this.score.innerHTML = `<span>Score: 0</span>`;
       this.audio.pause();
       this.initializeGame();
     }
@@ -358,9 +361,14 @@ __webpack_require__.r(__webpack_exports__);
 
 class LinkedList {
   constructor() {
+    this.initialize();
+  }
+  
+  initialize() {
     this.head = null;
     this.tail = null;
     this.size = 0;
+    this.curr = null;
   }
 
   insert(node) {
@@ -378,7 +386,9 @@ class LinkedList {
   }
 
   remove(node) {
-    if (this.size === 0) {
+    if (this.size === 0) return;
+
+    if (this.size === 1) {
       this.head = null;
       this.tail = null;
     } else if (node === this.head) {

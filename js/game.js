@@ -8,10 +8,14 @@ class Game {
   constructor(c) {
     // initialize board, boxes, speed, music
     this.c = c;
+    this.boxes = new LinkedList();
+    this.words = new Map();
   
     this.seleectElements();
     this.initializeGame();
-
+    this.listenToInput();
+    this.listenToKey();
+    
     this.animate = this.animate.bind(this);
     this.spawnRandomObject = this.spawnRandomObject.bind(this);
   } 
@@ -33,8 +37,6 @@ class Game {
     this.spawnRate = 1000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
-    this.boxes = new LinkedList();
-    this.words = new Map();
     this.startTime = Date.now();
     this.audio.loop = true;
     this.audio.load();
@@ -42,8 +44,6 @@ class Game {
     let value = localStorage.getItem("score");
     this.highestScore = value !== null ? parseInt(value) : 0;
 
-    this.listenToInput();
-    this.listenToKey();
   }
   
   // function to start the gamewet
@@ -129,17 +129,21 @@ class Game {
       
       if (this.boxes.head.val.y >= this.c.canvas.height) {
         this.life--;
+        console.log(this.life);
         this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
         if (this.life === 0) this.gameOver = true;
         let head = this.boxes.head;
         this.boxes.remove(head);
+        this.words.delete(head.val.text);
       }
     } else {
+      this.boxes.initialize();
+      this.words.clear();
       this.startBtn.disabled = false;
       this.startBtn.innerText = "Restart Game";
       localStorage.setItem("score", this.highestScore);
 
-      this.score.innerText = "";
+      this.score.innerHTML = `<span>Score: 0</span>`;
       this.audio.pause();
       this.initializeGame();
     }

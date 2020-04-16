@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const game = new Game(c);
   
   let highest = 0;
-  console.log(value)
   if (value !== null) highest = parseInt(value);
   
   highestscore.innerHTML = `<span>Highest: ${highest} </span>`;
