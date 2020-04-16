@@ -1,19 +1,22 @@
 import Game from "./game";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("canvas");
+  const canvas = document.querySelector("canvas");
   const c = canvas.getContext('2d');
 
-  const startBtn = document.getElementById("start-btn");
-  const score = document.getElementById("score");
-  const score_board = document.getElementById("score-broad");
-  const points = localStorage.getItem("score") || 0;
-
+  const startBtn = document.querySelector("button");
+  const score = document.querySelector("score");
+  const highestscore = document.querySelector("#highest-score");
+  const value = localStorage.getItem("score");
   const game = new Game(c);
+  
+  let highest = 0;
+  console.log(value)
+  if (value !== null) highest = parseInt(value);
+  
+  highestscore.innerHTML = `<span>Highest: ${highest} </span>`;
 
-  score_board.innerHTML = `<span>Highest: ${points} </span>`;
-  score.style.display = "none";
-
+  // console.log(startBtn);
   startBtn.addEventListener("click", () => {
     game.playGame();
   });
