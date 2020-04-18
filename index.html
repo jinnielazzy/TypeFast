@@ -15,30 +15,38 @@
     <div class="container" id="game">
       <div id="board">
         <canvas width="1000" height="800" id="canvas"></canvas>
-        <div class="container" id="user-input">
-          <input type='text' placeholder='Start Typing....' id='text'>
-        </div>
       </div>  
+      <div id="user-input">
+        <input type='text' placeholder='Start Typing....' 
+          id='text' autocomplete="off"
+          onfocus="this.placeholder = ''"
+        >
+      </div>
     </div>
     <div class="container" id="menu">
-      <div id="start-btn">
-        <button>Start Game</button>
-      </div>
-      <div id="instruction">
-        <ul>
-          <li>Press 'Enter' or Click 'Start Game' to start</li>
-          <li>You have total 3 lives</li>
-          <li>Type as fast as you can to beat your record</li>
-          <li>Press Esc to clear input</li>
-        </ul>
-      </div>
-      <div id="current-score">
-        <span>Score: 0</span>
-      </div>
-      <div id="highest-score">
-      </div>
-      <div id="life">
-        <span>life: 3</span>
+      <div id="menu-wrapper">
+        <div id="title">
+          <h3>Type FAST!!!</h3>
+        </div>
+        <div id="start-btn">
+          <button>Start Game</button>
+        </div>
+        <div id="instruction">
+          <ul>
+            <li>Press 'Enter' or Click 'Start Game' to start</li>
+            <li>You have total 3 lives</li>
+            <li>Press Esc to clear input</li>
+            <li>Type as fast as you can to beat your record</li>
+          </ul>
+        </div>
+        <div class="status" id="current-score">
+          <span>SCORE: 0</span>
+        </div>
+        <div class="status" id="highest-score">
+        </div>
+        <div class="status" id="life">
+          <span>LIFE: 3</span>
+        </div>
       </div>
     </div>
   </div>

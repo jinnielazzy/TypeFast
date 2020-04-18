@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let highest = 0;
   if (value !== null) highest = parseInt(value);
   
-  highestscore.innerHTML = `<span>Highest: ${highest} </span>`;
+  highestscore.innerHTML = `<span>HIGHEST: ${highest} </span>`;
 
   // console.log(startBtn);
   startBtn.addEventListener("click", () => {
@@ -299,9 +299,9 @@ class Game {
         let box = this.boxes.next().val;
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
-        // this.c.fillStyle = "#B6FF00";
+        this.c.fillStyle = "#B6FF00";
         this.c.fillText(box.text, box.x, box.y);
-        this.c.font = "30px Iceland";
+        this.c.font = "3em Iceland";
         this.c.closePath();
       }
       

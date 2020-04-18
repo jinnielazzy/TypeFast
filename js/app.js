@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let highest = 0;
   if (value !== null) highest = parseInt(value);
   
-  highestscore.innerHTML = `<span>Highest: ${highest} </span>`;
+  highestscore.innerHTML = `<span>HIGHEST: ${highest} </span>`;
 
   // console.log(startBtn);
   startBtn.addEventListener("click", () => {
