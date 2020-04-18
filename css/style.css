@@ -32,8 +32,8 @@ body {
 }
 
 canvas {
-  width: 80%;
-  height: 80%;
+  width: 100%;
+  height: 100%;
 }
 
 #user-input {
@@ -47,6 +47,7 @@ canvas {
 }
 
 input {
+  font-family: 'Special Elite', cursive;
   width: 100%;
   height: 100%;
   text-align: center;
@@ -101,12 +102,71 @@ li {
 }
 
 #title {
+  font-family: 'Bungee Shade', cursive;
   font-size: xx-large;
-  color: yellowgreen;
+  -webkit-animation: colorchange 20s infinite alternate;
+}
+
+@-webkit-keyframes colorchange {
+  0% {
+    color: blue;
+  }
+
+  10% {
+    color: #8e44ad;
+  }
+
+  20% {
+    color: #1abc9c;
+  }
+
+  30% {
+    color: #d35400;
+  }
+
+  40% {
+    color: blue;
+  }
+
+  50% {
+    color: #34495e;
+  }
+
+  60% {
+    color: blue;
+  }
+
+  70% {
+    color: #2980b9;
+  }
+
+  80% {
+    color: #f1c40f;
+  }
+
+  90% {
+    color: #2980b9;
+  }
+  
+  100% {
+    color: pink;
+  }
+}
+
+.status {
+  color: #f1c40f;
+  font-size: xx-large;
+  font-family: 'Fredericka the Great', cursive;
+}
+
+#life {
+  font-family: 'Nosifer', cursive;
+  color: crimson;
 }
 
 button {
-  font-size: large;
+  font-family: 'Bangers', cursive;
+  font-size: xx-large;
   color: white;
   text-decoration: none;
   background: brown;
@@ -126,12 +186,13 @@ button:hover {
 
 button:disabled {
   background: gray;
-  color: darkgoldenrod;
+  color: rgba(70, 77, 66, 0.897);
 }
 
 #instruction {
   text-align: center;
-  font-size: x-large;
+  font-size: larger;
+  font-family: 'Fredericka the Great', cursive;
 }
 
 ul {
@@ -139,13 +200,9 @@ ul {
 }
 
 li:nth-child(even) {
-  color: coral;
+  color: rgb(230, 65, 109);
 }
 
 li:nth-child(odd) {
-  color: greenyellow;
-}
-
-.status {
-  font-size: x-large;
+  color: rgba(0, 255, 76, 0.897);
 }

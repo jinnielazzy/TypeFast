@@ -299,9 +299,9 @@ class Game {
         let box = this.boxes.next().val;
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
-        this.c.fillStyle = "#B6FF00";
+        this.c.fillStyle = "rgb(34, 219, 43)";
         this.c.fillText(box.text, box.x, box.y);
-        this.c.font = "3em Iceland";
+        this.c.font = "2em 'Noticia Text', serif";
         this.c.closePath();
       }
       
