@@ -206,3 +206,12 @@ li:nth-child(even) {
 li:nth-child(odd) {
   color: rgba(0, 255, 76, 0.897);
 }
+
+footer {
+  display: flex;
+  flex-direction: column;
+}
+
+i {
+  color: #1abc9c;
+}
