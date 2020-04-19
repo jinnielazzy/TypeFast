@@ -95,18 +95,18 @@ class Game {
     if (!this.gameOver) {  
       const currentTime = Date.now();
       
-      // if (currentTime - this.startTime > 30000) {
-      //   // this.spawnRateOfDescent += 0.5;
-      //   // if (this.spawnRate <= 600) {
-      //   //   this.spawnRate -= 100;
-      //   // } else {
-      //   //   this.spawnRate -= 600;
-      //   // } 
+      if (currentTime - this.startTime > 30000) {
+        // this.spawnRateOfDescent += 0.5;
+        // if (this.spawnRate <= 600) {
+        //   this.spawnRate -= 100;
+        // } else {
+        //   this.spawnRate -= 600;
+        // } 
         
-      //   this.spawnRateOfDescent *= 1.5;
-      //   this.spawnRate *= 0.8;
-      //   this.startTime = currentTime;
-      // }
+        this.spawnRateOfDescent *= 1.5;
+        this.spawnRate *= 0.8;
+        this.startTime = currentTime;
+      }
         
       // console.log(currentTime, this.lastSpawn, this.spawnRate);
       if (currentTime - this.lastSpawn > this.spawnRate) {
