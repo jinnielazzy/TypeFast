@@ -8,48 +8,49 @@ class Game {
   constructor(c) {
     // initialize board, boxes, speed, music
     this.c = c;
-    this.score = document.getElementById("score");
-    this.audio = document.getElementById("audio");
-    this.input = document.getElementById("user-input");
-    this.inputField = document.getElementById("text");
-    this.startHeader = document.getElementById("start-header");
-    this.startBtn = document.getElementById("start-btn");
-    this.highest = document.querySelector("score-board");
-    this.highestBoard = document.getElementById("score-broad");
-    this.lifeBoard = document.querySelector(".life");
-
+    this.boxes = new LinkedList();
+    this.words = new Map();
+  
+    this.seleectElements();
     this.initializeGame();
+    this.listenToInput();
+    this.listenToKey();
+    
     this.animate = this.animate.bind(this);
     this.spawnRandomObject = this.spawnRandomObject.bind(this);
   } 
+  
+  seleectElements() {
+    this.score = document.querySelector("#current-score");
+    this.audio = document.querySelector("audio");
+    this.input = document.querySelector("#user-input input");
+    this.startBtn = document.querySelector("#start-btn button");
+    this.highest = document.querySelector("#highest-score");
+    this.lifeBoard = document.querySelector("#life");
+  }
 
   initializeGame() {
     this.life = 3;
     this.currentScore = 0;
-    this.highScore = parseInt(localStorage.getItem("score")) || 0;
     this.gameOver = true;
-    this.pause = true;
     this.spawnY = 25;
     this.spawnRate = 1000; 
     this.spawnRateOfDescent = 0.4;
     this.lastSpawn = -1;
-    this.boxes = new LinkedList();
-    this.words = new Map();
     this.startTime = Date.now();
     this.audio.loop = true;
     this.audio.load();
-    this.listenToInput();
-    this.listenToKey();
+
+    let value = localStorage.getItem("score");
+    this.highestScore = value !== null ? parseInt(value) : 0;
+
   }
   
   // function to start the gamewet
   playGame() {    
-    this.startHeader.style.display = "none";
-    this.score.style.display = "block";
-    this.score.innerText = "Score: 0";
-    this.input.style.display = "flex";   
-    this.inputField.value = "";   
-    this.inputField.focus();                    
+    this.input.value = "";   
+    this.input.focus();    
+    this.startBtn.disabled = true;
     // this.audio.play();
     this.gameOver = false;
     this.pause = false;
@@ -57,11 +58,10 @@ class Game {
   }
     
   keyDown(e) {
-    if (e.keyCode === 27 && !this.gameOver) this.inputField.value = "";
-    if (e.keyCode === 13) {
-      if (this.gameOver) this.playGame();
-      // else this.pause = !this.pause;
-    }
+    // clear input
+    if (e.keyCode === 27 && !this.gameOver) this.input.value = "";
+    // start game
+    if (e.keyCode === 13 && this.gameOver) this.playGame();
   }
 
   listenToKey() {
@@ -70,89 +70,92 @@ class Game {
 
   listenToInput() {
     this.input.addEventListener("input", e => {
-      const userInput = e.target.value;
+      let userInput = e.target.value;
       if (this.words.has(userInput)) {
+        console.log(userInput);
         let node = this.words.get(userInput);
-        let box = node.val;
 
         this.boxes.remove(node);
         this.words.delete(userInput);
 
         e.target.value = "";
         this.currentScore++;
-        this.score.innerText = `Score: ${this.currentScore}`;
+        this.score.innerHTML = `<span>Score: ${this.currentScore} </span>`;
+
+        if (this.currentScore > this.highestScore) {
+          this.highest.innerHTML = `<span>Highest: ${this.currentScore} </span>`;
+          this.highestScore = this.currentScore;
+        }
       }
     })
   }
   
   animate() {
+    this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
     if (!this.gameOver) {  
-      const time = Date.now();
-      if (this.currentScore > this.highScore) this.highestBoard.innerText = this.currentScore;
+      const currentTime = Date.now();
       
-      if (time - this.startTime > 60000) {
-        // this.spawnRateOfDescent += 0.5;
-        // if (this.spawnRate <= 600) {
-        //   this.spawnRate -= 100;
-        // } else {
-        //   this.spawnRate -= 600;
-        // } 
+      // if (currentTime - this.startTime > 30000) {
+      //   // this.spawnRateOfDescent += 0.5;
+      //   // if (this.spawnRate <= 600) {
+      //   //   this.spawnRate -= 100;
+      //   // } else {
+      //   //   this.spawnRate -= 600;
+      //   // } 
         
-        this.spawnRateOfDescent *= 1.5;
-        this.spawnRate *= 0.99;
-        this.startTime = time;
-      }
-      
-      console.log(time, this.lastSpawn, this.spawnRate);
-      if (time - this.lastSpawn > this.spawnRate) {
-        this.lastSpawn = time;
+      //   this.spawnRateOfDescent *= 1.5;
+      //   this.spawnRate *= 0.8;
+      //   this.startTime = currentTime;
+      // }
+        
+      // console.log(currentTime, this.lastSpawn, this.spawnRate);
+      if (currentTime - this.lastSpawn > this.spawnRate) {
+        this.lastSpawn = currentTime;
         this.spawnRandomObject();
       }
       
-      this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-      requestAnimationFrame(this.animate);
-      
       if (this.boxes.size === 0) return;
-      
+          
       this.boxes.reset();
       while (this.boxes.hasNext()) {
         let box = this.boxes.next().val;
         box.y += this.spawnRateOfDescent;
         this.c.beginPath();
-        this.c.fillStyle = "#B6FF00";
+        this.c.fillStyle = "rgb(34, 219, 43)";
         this.c.fillText(box.text, box.x, box.y);
-        this.c.font = "30px Iceland";
+        this.c.font = "2em 'Noticia Text', serif";
         this.c.closePath();
       }
       
-      // if (this.boxes.head.val.y >= this.c.canvas.height) {
-      //   this.life--;
-      //   this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
-      //   if (this.life === 0) this.gameOver = true;
-      //   let head = this.boxes.head;
-      //   this.boxes.remove(head);
-      // }
+      if (this.boxes.head.val.y >= this.c.canvas.height) {
+        this.life--;
+        this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
+        if (this.life === 0) this.gameOver = true;
+        let head = this.boxes.head;
+        this.boxes.remove(head);
+        this.words.delete(head.val.text);
+      }
     } else {
-      this.startHeader.style.display = "flex";
-      this.startBtn.innerHTML = "<span style='style: >Restart Game</span>";
-
-      let highestScore = localStorage.getItem("score");
-      highestScore = Math.max(highestScore, this.currentScore);
-      localStorage.setItem("score", highestScore);
-
-      this.score.innerText = "";
+      this.boxes.initialize();
+      this.words.clear();
+      this.startBtn.disabled = false;
+      this.startBtn.innerText = "Restart Game";
+      localStorage.setItem("score", this.highestScore);
+      
+      this.score.innerHTML = `<span>Score: 0</span>`;
       this.audio.pause();
       this.initializeGame();
     }
+    requestAnimationFrame(this.animate);
   }
 
   spawnRandomObject() {
-    const word = randomWords();
+    let word = randomWords();
+    while (this.words.has(word)) word = randomWords();
+
     let x = Math.random() * 900;
 
-    while (x + this.c.measureText(word).width > 800) {
-      x -= 100;
-    }
+    while (x + this.c.measureText(word).width > 800) x -= 100;
 
     let box = new Box(this.c, x, this.spawnY, word);
     let node = new Node(box);

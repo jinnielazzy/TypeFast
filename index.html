@@ -5,39 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./css/style.css">
-  <link href="https://fonts.googleapis.com/css?family=Iceland|Audiowide&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bangers&family=Bungee&family=Bungee+Shade&family=Fredericka+the+Great&family=Graduate&family=Nosifer&family=Special+Elite&family=Noticia+Text:wght@700&display=swap"
+    rel="stylesheet">
   <audio id="audio" src="./music/DAOKO (ダヲコ),米津玄師 (よねづ けんし)-打上花火.mp3"></audio>
   <title>TypeFast</title>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163890831-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-163890831-1');
+  </script>
 </head>
 <body>
-  <div class="header-container">
-    <div class="score-container">
-      <span id="score"></span>
-      <!-- <button class="btn-mute" id="music"><span>PAUSE MUSIC</span></button> -->
+  <div id="wrapper">
+    <div class="container" id="game">
+      <div id="board">
+        <canvas width="1000" height="800" id="canvas"></canvas>
+      </div>  
+      <div id="user-input">
+        <input type='text' placeholder='Start Typing....' 
+          id='text' autocomplete="off"
+          onfocus="this.placeholder = ''"
+        >
+      </div>
     </div>
-    <div id="score-broad" class="glow">
-    </div>
-  </div>
-  
-  <div class="life">
-    <span>life: 3</span>
-  </div>
-  <div class="main-container">
-    <div class="main-header-container" id="main-header">
-      <div id="start-header">
-        <button id="start-btn"><span>Start Game</span></button>
+    <div class="container" id="menu">
+      <div id="menu-wrapper">
+        <div id="title">
+          <h1>Type FAST!!!</h3>
+        </div>
+        <div id="start-btn">
+          <button>Start Game</button>
+        </div>
         <div id="instruction">
-          <span>Click start game Or Press enter!!</span>
+          <ul>
+            <li>Press 'Enter' or Click 'Start Game' to start</li>
+            <li>You have total 3 lives</li>
+            <li>Press Esc to clear input</li>
+            <li>Type as fast as you can to beat your record</li>
+          </ul>
+        </div>
+        <div class="status" id="current-score">
+          <span>SCORE: 0</span>
+        </div>
+        <div class="status" id="highest-score">
+        </div>
+        <div class="status" id="life">
+          <span>LIFE: 3</span>
         </div>
       </div>
     </div>
-    <div class="board-container">
-      <canvas width="1000" height="800" id="canvas"></canvas>
-      <div id="user-input">
-        <input type='text' placeholder='Start Typing....' id='text'>
-      </div>
-    </div>  
   </div>
+  <footer>
+    <a href="https://www.linkedin.com/in/jin-c-15167b187/"><i class="fa fa-linkedin" style="font-size:xx-large"></i></a>
+    <a href="https://github.com/jinhuachen1314/TypeFast"><i class="fa fa-github" style="font-size:xx-large"></i></a>
+  </footer>
   <script type="application/javascript" src="./bundle.js"></script>
 </body>
 </html>

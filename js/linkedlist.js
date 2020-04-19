@@ -2,9 +2,14 @@ import Node from './node';
 
 class LinkedList {
   constructor() {
+    this.initialize();
+  }
+  
+  initialize() {
     this.head = null;
     this.tail = null;
     this.size = 0;
+    this.curr = null;
   }
 
   insert(node) {
@@ -22,7 +27,9 @@ class LinkedList {
   }
 
   remove(node) {
-    if (this.size === 0) {
+    if (this.size === 0) return;
+
+    if (this.size === 1) {
       this.head = null;
       this.tail = null;
     } else if (node === this.head) {
