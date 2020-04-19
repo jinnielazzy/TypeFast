@@ -9,7 +9,6 @@ well as the speed of falling. Users need to clear out the text boxes before the
 boxes hit the groud, and users have to clear them in the order of falling. Each
 hit gets 1 point.
 
-<!-- ![](https://media.giphy.com/media/KzcINd1me3tcfRSQqM/giphy.gif) -->
 ![](https://media.giphy.com/media/izbVPk2M0xbQs5Pe98/giphy.gif)
 
 Text box class
@@ -35,52 +34,149 @@ Generate random words using existing library
 const randomWords = require('random-words');
 ```
 
+Underlying data storage with Customize Linked List class and JS Map 
+Increase look up and removal speed
+```javascript
+class Node {
+  constructor(val) {
+    this.val = val;
+    this.prev = null;
+    this.next = null;
+  }
+}
+
+export default Node;
+```
+
+```javascript
+import Node from './node';
+
+class LinkedList {
+  constructor() {
+    this.initialize();
+  }
+  
+  initialize() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+    this.curr = null;
+  }
+
+  insert(node) {
+    if (this.size === 0) {
+      this.head = node;
+      this.tail = node;
+      this.curr = this.head;
+    } else {
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
+    }
+
+    this.size++;
+  }
+
+  remove(node) {
+    if (this.size === 0) return;
+
+    if (this.size === 1) {
+      this.head = null;
+      this.tail = null;
+    } else if (node === this.head) {
+      this.head = node.next;
+    } else if (node === this.tail) {
+      this.tail = node.prev;
+    } else {
+      node.prev.next = node.next;
+      node.next.prev = node.prev;
+    }
+
+    this.size--;
+  }
+
+  reset() {
+    this.curr = this.head;
+  }
+
+  hasNext() {
+    return this.curr !== null;
+  }
+
+  next() {
+    let node = this.curr;
+    this.curr = node.next;
+    return node;
+  }
+}
+
+export default LinkedList;
+```
+
+```javascript
+this.boxes = new LinkedList();
+this.words = new Map();
+```
+
+Enable to recycle the storage
+```javascript
+this.boxes.initialize();
+this.words.clear();
+```
+
+
 Creation of each text box, and listening to
 user's input
 ```javascript
 spawnRandomObject() {
-  const word = randomWords();
-  let x = Math.random() * (this.c.canvas.width);
+  let word = randomWords();
+  while (this.words.has(word)) word = randomWords();
 
-  while (x + this.c.measureText(word).width > this.c.canvas.width) {
-    x -= 100;
-  }
+  let x = Math.random() * 900;
 
-  const box = new Box(this.c, x, this.spawnY, word);
-  this.words.push(word);
-  this.boxes.push(box);
+  while (x + this.c.measureText(word).width > 800) x -= 100;
+
+  let box = new Box(this.c, x, this.spawnY, word);
+  let node = new Node(box);
+  this.boxes.insert(node);
+  this.words.set(word, node);
 }
 
 listenToInput() {
   this.input.addEventListener("input", e => {
-    const userInput = e.target.value;
-    if (this.words.includes(userInput)) {
-      const box = this.boxes.find(box => box.text === userInput);
-      this.words = this.words.filter(word => word !== userInput);
-      this.boxes = this.boxes.filter(box => box.text != userInput);
+    let userInput = e.target.value;
+    if (this.words.has(userInput)) {
+      console.log(userInput);
+      let node = this.words.get(userInput);
 
-      this.c.rect(box.x, box.y, 150, 100);
-      this.c.stroke();
+      this.boxes.remove(node);
+      this.words.delete(userInput);
 
       e.target.value = "";
       this.currentScore++;
-      this.score.innerText = "Score: " + this.currentScore;
+      this.score.innerHTML = `<span>Score: ${this.currentScore} </span>`;
+
+      if (this.currentScore > this.highestScore) {
+        this.highest.innerHTML = `<span>Highest: ${this.currentScore} </span>`;
+        this.highestScore = this.currentScore;
+      }
     }
   })
 }
 ```
 
-Monitor speed, and increase the speed
+Monitor speed, and increase the speed, time to spawn word
 ```javascript
-const time = Date.now();   
-
-if (time - this.startTime > 60000) {
-  this.spawnRateOfDescent += 0.5;
-  this.startTime = time;
+const currentTime = Date.now();
+    
+if (currentTime - this.startTime > 30000) {
+  this.spawnRateOfDescent *= 1.5;
+  this.spawnRate *= 0.8;
+  this.startTime = currentTime;
 }
-
-if (time > (this.lastSpawn + this.spawnRate)) {
-  this.lastSpawn = time;
+  
+if (currentTime - this.lastSpawn > this.spawnRate) {
+  this.lastSpawn = currentTime;
   this.spawnRandomObject();
 }
 ```
@@ -88,7 +184,6 @@ if (time > (this.lastSpawn + this.spawnRate)) {
 avoid promise error of the music, load the music, and play when user starts
 ```javascript
 initializeGame() {
-  // other initializions here
   this.audio.load();
 }
 
@@ -97,22 +192,16 @@ playGame() {
 }
 ```
 
-While firing score animation, 
-applying mutation observer over mutation events to avoid overly fired, crashy, and slowness
+Remember user's highest record using browser's local storage
 ```javascript
-const callback = (mutationsList, observer) => {
-  for (const mutation of mutationsList) {
-    if (mutation.type === "childList") {
-      const target = mutation.target;
+// GET USER'S HIGHEST RECORD
+const value = localStorage.getItem("score");
 
-      target.classList.add('glow');
-      setTimeout(function () {
-        target.classList.remove('glow')
-      }, 500);
-    }
-  }
-};
+let highest = 0;
+if (value !== null) highest = parseInt(value);
 
-const observer = new MutationObserver(callback);
-observer.observe(score, config);
+highestscore.innerHTML = `<span>HIGHEST: ${highest} </span>`;
+
+// UPDATE RECORD
+localStorage.setItem("score", this.highestScore);
 ```
