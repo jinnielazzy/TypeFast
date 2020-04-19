@@ -9,7 +9,8 @@ well as the speed of falling. Users need to clear out the text boxes before the
 boxes hit the groud, and users have to clear them in the order of falling. Each
 hit gets 1 point.
 
-![](https://media.giphy.com/media/KzcINd1me3tcfRSQqM/giphy.gif)
+<!-- ![](https://media.giphy.com/media/KzcINd1me3tcfRSQqM/giphy.gif) -->
+![](https://media.giphy.com/media/izbVPk2M0xbQs5Pe98/giphy.gif)
 
 Text box class
 ```javascript
