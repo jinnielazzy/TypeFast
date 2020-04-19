@@ -181,7 +181,7 @@ if (currentTime - this.lastSpawn > this.spawnRate) {
 }
 ```
 
-avoid promise error of the music, load the music, and play when user starts
+Avoid promise error of the music, load the music, and play when user starts
 ```javascript
 initializeGame() {
   this.audio.load();
