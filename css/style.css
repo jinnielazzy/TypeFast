@@ -2,7 +2,6 @@ html, body {
   width:  100%;
   height: 100%;
   background-image: url("background.gif");
-  /* background-repeat: no-repeat; */
   background-size: cover;
 }
 
@@ -16,12 +15,6 @@ body {
   width: 70%;
   height: 70%;
   display: flex;
-  /* background-color: blanchedalmond; */
-}
-
-.container {
-  /* border: 2px solid fuchsia; */
-  /* background-color: coral; */
 }
 
 #board {
@@ -71,14 +64,12 @@ input:focus {
 #game {
   width:70%;
   height: auto;
-  /* background-color: aquamarine; */
 }
 
 
 #menu {
   display: flex;
   width: 30%;
-  /* background-color: cadetblue; */
   justify-content: center;
   align-items: center;
   margin-left: 100px;

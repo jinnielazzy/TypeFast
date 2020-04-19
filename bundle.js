@@ -250,6 +250,7 @@ class Game {
     this.input.addEventListener("input", e => {
       let userInput = e.target.value;
       if (this.words.has(userInput)) {
+        console.log(userInput);
         let node = this.words.get(userInput);
 
         this.boxes.remove(node);
@@ -258,42 +259,41 @@ class Game {
         e.target.value = "";
         this.currentScore++;
         this.score.innerHTML = `<span>Score: ${this.currentScore} </span>`;
+
+        if (this.currentScore > this.highestScore) {
+          this.highest.innerHTML = `<span>Highest: ${this.currentScore} </span>`;
+          this.highestScore = this.currentScore;
+        }
       }
     })
   }
   
   animate() {
+    this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
     if (!this.gameOver) {  
-      const time = Date.now();
-      if (this.currentScore > this.highestScore) {
-        this.highest.innerHTML = `<span>Highest: ${this.currentScore} </span>`;
-        this.highestScore = this.currentScore;
-      }
+      const currentTime = Date.now();
       
-      if (time - this.startTime > 60000) {
-        // this.spawnRateOfDescent += 0.5;
-        // if (this.spawnRate <= 600) {
-        //   this.spawnRate -= 100;
-        // } else {
-        //   this.spawnRate -= 600;
-        // } 
+      // if (currentTime - this.startTime > 30000) {
+      //   // this.spawnRateOfDescent += 0.5;
+      //   // if (this.spawnRate <= 600) {
+      //   //   this.spawnRate -= 100;
+      //   // } else {
+      //   //   this.spawnRate -= 600;
+      //   // } 
         
-        this.spawnRateOfDescent *= 1.5;
-        this.spawnRate *= 0.99;
-        this.startTime = time;
-      }
-      
-      // console.log(time, this.lastSpawn, this.spawnRate);
-      if (time - this.lastSpawn > this.spawnRate) {
-        this.lastSpawn = time;
+      //   this.spawnRateOfDescent *= 1.5;
+      //   this.spawnRate *= 0.8;
+      //   this.startTime = currentTime;
+      // }
+        
+      // console.log(currentTime, this.lastSpawn, this.spawnRate);
+      if (currentTime - this.lastSpawn > this.spawnRate) {
+        this.lastSpawn = currentTime;
         this.spawnRandomObject();
       }
       
-      this.c.clearRect(0, 0, this.c.canvas.width, this.c.canvas.height);
-      requestAnimationFrame(this.animate);
-      
       if (this.boxes.size === 0) return;
-      
+          
       this.boxes.reset();
       while (this.boxes.hasNext()) {
         let box = this.boxes.next().val;
@@ -307,7 +307,6 @@ class Game {
       
       if (this.boxes.head.val.y >= this.c.canvas.height) {
         this.life--;
-        console.log(this.life);
         this.lifeBoard.innerHTML = `<span>life: ${this.life} </span>`;
         if (this.life === 0) this.gameOver = true;
         let head = this.boxes.head;
@@ -320,20 +319,21 @@ class Game {
       this.startBtn.disabled = false;
       this.startBtn.innerText = "Restart Game";
       localStorage.setItem("score", this.highestScore);
-
+      
       this.score.innerHTML = `<span>Score: 0</span>`;
       this.audio.pause();
       this.initializeGame();
     }
+    requestAnimationFrame(this.animate);
   }
 
   spawnRandomObject() {
-    const word = randomWords();
+    let word = randomWords();
+    while (this.words.has(word)) word = randomWords();
+
     let x = Math.random() * 900;
 
-    while (x + this.c.measureText(word).width > 800) {
-      x -= 100;
-    }
+    while (x + this.c.measureText(word).width > 800) x -= 100;
 
     let box = new _box__WEBPACK_IMPORTED_MODULE_0__["default"](this.c, x, this.spawnY, word);
     let node = new _node__WEBPACK_IMPORTED_MODULE_2__["default"](box);
