@@ -229,7 +229,7 @@ class Game {
     this.input.value = "";   
     this.input.focus();    
     this.startBtn.disabled = true;
-    // this.audio.play();
+    this.audio.play();
     this.gameOver = false;
     this.pause = false;
     this.animate();
